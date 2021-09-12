@@ -159,3 +159,6 @@ URL=https://reikawatanabe.com/whats-apache-license-v2/
 others/Blockly-ブロック型プログラムエディタライブラリ 2017年版 - catch.jp-wiki.url
 [InternetShortcut]
 URL=https://www.catch.jp/wiki/index.php?Programing%2FBlockly2017
+
+参考元
+https://noitalog.tokyo/electron-show-open-dialog/

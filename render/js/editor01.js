@@ -23,7 +23,7 @@ function onLoad01() {
   editor01.focus();
 
   editor01.setFontSize(16);
-  editor01.setReadOnly(true);
+  editor01.setReadOnly(false);
   editor01.setShowPrintMargin(false);
 
   editor01.session.getDocument().on('change', (ob)=> {
