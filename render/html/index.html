@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
+
+    <script src="../js/jquery-3.6.0.min.js"></script>
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+        integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous">
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"
+        integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous">
+        </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> -->
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
+
+    <!-- Javascripts -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js"></script>
+
+    <!-- import fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- import styles -->
+    <!-- <link rel='stylesheet' href='../css/styles.css'> -->
+    <!-- <script src="../js/editor.js"></script> -->
+
+    <script src="../js/editor01.js"></script>
+    <script src="../js/editor02.js"></script>
+
+    <link rel="stylesheet" href="../css/index.css">
+    <title>diff check</title>
+</head>
+
+<body>
+    <nav class="navbar bg-secondary" id="header">
+        <h1 class="h5 text-light">AgainFTP</h1>
+    </nav>
+    <div class="row m-0" id="content" style="height: 50%">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0" id="paramdiv">
+            <div class="row m-0" id="dd1" style="height: 50px">
+                <div class="receiving-box-outer">
+                    <div class="receiving-box-inner">file1をドラッグ＆ドロップ</div>
+                </div>
+            </div>
+            <button type="button" id="btn_path1" class="btn btn-info">file1</button>
+            <input type="text"  id="txt_path1"  style="width: 90%">
+            <!-- <textarea name="src" id="file1" cols="120" rows="10" style="overflow:auto;"></textarea> -->
+            <div class="row m-0" id="content01" style="width: 100%;height: 100%">
+                <div  id="editor_area01"></div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0" id="paramdiv">
+            <div class="row m-0" id="dd2" style="height: 50px">
+                <div class="receiving-box-outer">
+                    <div class="receiving-box-inner">file2をドラッグ＆ドロップ</div>
+                </div>
+            </div>
+            <button type="button" id="btn_path2" class="btn btn-info">file2</button>
+            <input type="text"  id="txt_path2"  style="width: 90%">
+            <!-- <textarea name="src" id="file2" cols="120" rows="10" style="overflow:auto;"></textarea> -->
+            <div class="row m-0" id="content02" style="width: 100%;height: 100%">
+                <div id="editor_area02"></div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row m-0" id="content" style="height: 50px">
+        <div class="btn-group" role="group" style="height:50px;">
+            <button type="button" class="btn btn-secondary" onclick="resetIt()" >reset</button>
+            <button type="button" class="btn btn-secondary"                       >reload</button>
+            <button type="button" class="btn btn-secondary"                       >save</button>
+            <select class="form-select" aria-label="encoding"  style="width: 200px">
+                <option selected>utf8</option>
+                <option value="1">utf8(bom)</option>
+                <option value="2">shift-jis</option>
+            </select>
+            <button type="button" class="btn btn-primary"     onclick="kickout()" >check</button>
+        </div>
+    </div>
+    <div id="diffelement"></div>
+    <script>
+        let dd1 = document.querySelector('#dd1');
+        let dd2 = document.querySelector('#dd2');
+        dd1.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (e.dataTransfer.files.length >= 1){
+                let path = e.dataTransfer.files[0].path;
+                // readFile("file2", path)
+                readFile1("file1", path) ;
+            }
+            if (e.dataTransfer.files.length >= 2){
+                let path = e.dataTransfer.files[1].path;
+                // readFile("file2", path)
+                readFile2("file2",path) ;
+            }
+        });
+        dd1.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        dd2.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (e.dataTransfer.files.length >= 1){
+                let path = e.dataTransfer.files[0].path;
+                // readFile("file2", path)
+                readFile2("file2",path) ;
+            }
+        });
+        dd2.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        document.getElementById('btn_path1').addEventListener('click', () => {
+            const { dialog } = require('electron').remote;
+            let files = dialog.showOpenDialogSync({ filters: [{ name: 'Text', extensions: ['txt', 'csv', 'xml'] }] })
+            if (files.length > 0) readFile("file1", files[0])
+        });
+
+        document.getElementById('btn_path2').addEventListener('click', () => {
+            const { dialog } = require('electron').remote;
+            let files = dialog.showOpenDialogSync({ filters: [{ name: 'Text', extensions: ['txt', 'csv', 'xml'] }] })
+            if (files.length > 0) readFile("file2", files[0])
+        });
+
+        function readfile(path,encode){
+            // let buffer = fs.readFileSync(path, 'utf-8');
+            let buffer = fs.readFileSync(path);
+            const data = Encoding.convert(buffer, {
+                // from: 'SJIS',
+                from: encode,
+                to: 'UNICODE',
+                type: 'string',
+            });
+            return data;
+        } 
+
+        function readFile1(dest, path) {
+            let data = readfile(path,'utf-8');
+            document.getElementById("txt_path1").value = path;
+            // document.getElementById(dest).value = data;
+            editor01.session.getDocument().setValue(data);
+        }
+        function readFile2(dest, path) {
+            let data = readfile(path,'utf-8');
+            // let data = fs.readFileSync(path, 'utf-8');
+            document.getElementById("txt_path2").value = path;
+            // document.getElementById(dest).value = data;
+            editor02.session.getDocument().setValue(data);
+        }
+
+        function readFile(dest, path) {
+            fs.readFile(path, 'utf8', (error, data) => {
+                if (error != null) {
+                    alert("file open error.");
+                    return;
+                }
+                // console.log(data);
+                document.getElementById(dest).value = data.toString();
+            });
+        }
+
+        function resetIt(){
+            // console.log("### resetIt ###")
+            document.getElementById("txt_path1").value = "";
+            document.getElementById("txt_path2").value = "";
+            editor01.session.getDocument().setValue("");
+            editor02.session.getDocument().setValue("");
+        }
+
+        function kickout() {
+            let text1 = editor01.session.getDocument().getValue();
+            let text2 = editor02.session.getDocument().getValue();
+            // let text1 = document.getElementById("file1").value;
+            // let text2 = document.getElementById("file2").value;
+            let diffText = Diff.createPatch('diff', text1, text2);
+            // console.log("## diffText:"+diffText)
+            const diffelement = document.getElementById('diffelement');
+            const configuration = { drawFileList: true, matching: 'lines' };
+            const diff2htmlUi = new Diff2HtmlUI(diffelement, diffText, configuration);
+            diff2htmlUi.draw();
+            // console.log("## diff ↓ ###################################################")
+            // console.log(document.getElementById('diffelement').innerHTML)
+            // console.log("## diff ↑ ###################################################")
+        }
+        function text2dict(prmTxt) {
+            let dict = {
+                '\\\\r\\\\n': "\n",
+                '\\\\t': "\t",
+            };
+            let array = prmTxt.trim().split("\n")
+            for (let index = 0; index < array.length; index++) {
+                // console.log(`line :${array[index]}`)
+                let rows = array[index].split("\t");
+                if (rows.length >= 2) {
+                    let key = "{{" + rows[0] + "}}";
+                    dict[key] = rows[1]
+                    // console.log(`key :${key} value :${rows[1]}`)
+                }
+            }
+            return dict;
+        }
+    </script>
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+
+</html>
